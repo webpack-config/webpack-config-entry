@@ -23,9 +23,14 @@ const targetData = (target) => {
   }
 };
 
+const normalize = (root, base) => {
+  return base.charAt(0) === '/' ? base : path.join(root, base);
+};
+
 export default ({
   name,
   root = path.dirname(nearest('package.json')),
+  output = path.join('dist', name),
 }) => (config) => partial(config, {
   entry: {
     [name]: path.join(root, 'entry', `${name}.entry.js`),
@@ -34,7 +39,7 @@ export default ({
   // Output controls the settings for file generation.
   output: {
     filename: '[name].js',
-    path: path.join(root, 'build', name),
+    path: normalize(root, output),
     chunkFilename: '[id].js',
   },
   plugins: [
